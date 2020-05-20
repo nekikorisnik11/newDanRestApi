@@ -1,0 +1,867 @@
+{
+	"info": {
+		"_postman_id": "96541c7d-2115-4c11-bd51-65cba259e2f7",
+		"name": "Ojacavanje Auth tests Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "it should GET home API url",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8c5af976-7030-4421-810f-3efcb67cadf7",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				},
+				"description": "Testiranje hosta. Testiramo glavnu rutu"
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bbaa57ab-8442-4797-a717-79daf863eacc",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"token\", x.token);\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{url}}/login?email=user@user.com&password=12345",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "user@user.com"
+						},
+						{
+							"key": "password",
+							"value": "12345"
+						},
+						{
+							"key": "id",
+							"value": "5aa1c2c35ef7a4e97b5e995a",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Testiranje prijavljivanja sa validnim podacima za prijavu."
+			},
+			"response": []
+		},
+		{
+			"name": "it should POST register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "51a13538-6177-4acc-aed5-8aa30e9ecb85",
+						"exec": [
+							"\r",
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"token\", x.token);\r",
+							"pm.environment.set(\"userid\", x.user._id)\r",
+							"console.log(x.user._id);\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0befeb95-d9bb-4878-ad09-28d08723aeda",
+						"exec": [
+							"const uuid = Math.random().toString(32).substring(2, 7) +\r",
+							"        Math.random().toString(32).substring(2, 7);\r",
+							"const currentEmail = \"user_\" + uuid + \"@asasdasd.com\";\r",
+							"pm.environment.set(\"currentEmail\", currentEmail);\r",
+							"\r",
+							"\r",
+							"const currentName = \"Mc \" + \"O\" +uuid;\r",
+							"\r",
+							"pm.environment.set(\"currentName\", currentName);\r",
+							"\r",
+							"\r",
+							"\r",
+							"const allCapsAlpha = [...\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"]; \r",
+							"const allLowerAlpha = [...\"abcdefghijklmnopqrstuvwxyz\"]; \r",
+							"\r",
+							"\r",
+							"const base = [...allCapsAlpha,...allLowerAlpha];\r",
+							"\r",
+							"const generator = (base, len) => {\r",
+							"   return [...Array(len)]\r",
+							"     .map(i => base[Math.random()*base.length|0])\r",
+							"     .join('');\r",
+							"};\r",
+							"\r",
+							"console.log('OUTPUT: ', generator(base, 28));\r",
+							"let uuid_string=generator(base, 28);\r",
+							"\r",
+							"\r",
+							"console.log(\"ovo je string\"+uuid_string);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "John {{currentName}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{currentEmail}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234567",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/register",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"register"
+					]
+				},
+				"description": "Testiranje registracije sa validnim podacima.(Sačuvati verification property za buduće potrebe)\r\n\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT POST a register if email already exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1b9261af-3e84-491e-b10d-4c36d477317d",
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f622694c-f6b9-4d21-b68f-5ee1a74e342e",
+						"exec": [
+							"const uuid = Math.random().toString(32).substring(2, 7) +\r",
+							"        Math.random().toString(32).substring(2, 7);\r",
+							"\r",
+							"\r",
+							"\r",
+							"const currentName = \"Mc \" + \"O\" + uuid;\r",
+							"\r",
+							"pm.environment.set(\"currentName\", currentName);\r",
+							"\r",
+							"let uuid_string = String.fromCharCode(uuid);\r",
+							"console.log(\"ovo je string\" + uuid_string);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "John {{currentName}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{currentEmail}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234567",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/register",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"register"
+					]
+				},
+				"description": "testiranje registracije sa postojecim emailom\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "post login Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5ea01b05-4404-4429-bab5-a174dd140c9b",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"\r",
+							"pm.environment.set(\"token\", x.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "email",
+						"value": "admin@admin.com",
+						"type": "text"
+					},
+					{
+						"key": "name",
+						"value": "Nikolaaa Nikoliniiiii",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "password",
+						"value": "12345",
+						"type": "text"
+					},
+					{
+						"key": "id",
+						"value": "5ec17c9c4ec53672e9f7ea30",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "email",
+						"value": "admin@admin.com",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "id",
+						"value": "5ec189b494bc227cab2acdd9",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "id",
+						"value": "5ec191bb911c5f7ddd4469c6",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "name",
+						"value": "c",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/login?email=admin@admin.com&password=12345",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "admin@admin.com"
+						},
+						{
+							"key": "password",
+							"value": "12345"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post admin Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "33642ce1-17ac-4268-834f-e53bf0dcd1f3",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"\r",
+							"pm.globals.set(\"token\", x.token);\r",
+							"\r",
+							"\r",
+							"console.log(\"treba mi \" +x.docs[0].verification);\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(jsonData);\r",
+							"let userid = pm.environment.get(\"userid\");\r",
+							"//pm.environment.set(\"variable_key\", \"variable_value\");\r",
+							"\r",
+							"console.log(\"za verifikaciju\"+userid);\r",
+							"\r",
+							"for(let filter of jsonData.docs){\r",
+							"   if(filter._id ==pm.environment.get(\"userid\")){\r",
+							"       \r",
+							"pm.environment.set(\"idver\", filter.verification);\r",
+							"pm.environment.set(\"emailuser1\", filter.email);\r",
+							"        console.log(\"Bravisimo\");\r",
+							"    }\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "admin@admin.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "12345",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/users",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "it should POST verify",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3491d36d-41ee-4163-8f93-fb3d8dae0ee2",
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "70d17967-dc11-4058-acba-b71b6d31304d",
+						"exec": [
+							"const uuid = Math.random().toString(32).substring(2, 7) +\r",
+							"        Math.random().toString(32).substring(2, 7);\r",
+							"\r",
+							"\r",
+							"\r",
+							"const currentName = \"Mc \" + \"O\" + uuid;\r",
+							"\r",
+							"pm.environment.set(\"currentName\", currentName);\r",
+							"\r",
+							"console.log(\"ovo je string\" + uuid);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "{{idver}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/verify",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"verify"
+					]
+				},
+				"description": "Testiranje verifikacije sa validnim id-jem."
+			},
+			"response": []
+		},
+		{
+			"name": "it should POST forgot",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b9592f3-5712-4178-a352-920b67255469",
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f1ba058f-baf7-4c59-bf47-bf0e72083b97",
+						"exec": [
+							"const uuid = Math.random().toString(32).substring(2, 7) +\r",
+							"        Math.random().toString(32).substring(2, 7);\r",
+							"\r",
+							"\r",
+							"\r",
+							"const currentName = \"Mc \" + \"O\" + uuid;\r",
+							"\r",
+							"pm.environment.set(\"currentName\", currentName);\r",
+							"\r",
+							"console.log(\"ovo je string\" + uuid);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "{{idver}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "{{emailuser1}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/forgot",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"forgot"
+					]
+				},
+				"description": "Testiranje sa validnim email-om. (Sacuvati verification sa sledece API pozive)"
+			},
+			"response": []
+		},
+		{
+			"name": "it should POST reset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "54280f0f-9225-46a1-b832-4afe2b469d3b",
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ac3c3bf0-f185-4219-9a11-6aed248f8510",
+						"exec": [
+							"const uuid = Math.random().toString(32).substring(2, 7) +\r",
+							"        Math.random().toString(32).substring(2, 7);\r",
+							"\r",
+							"\r",
+							"\r",
+							"const currentName = \"Mc \" + \"O\" + uuid;\r",
+							"\r",
+							"pm.environment.set(\"currentName\", currentName);\r",
+							"\r",
+							"console.log(\"ovo je string\" + uuid);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "{{idver}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "{{emailuser1}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "verificationForgot",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/reset",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"reset"
+					]
+				},
+				"description": "Resetovanje sa validnim passwordom i id-em. (verification sačuvan iz prethodnog api poziva se salje)"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT be able to consume the route since no token was sent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "22b461ca-15dd-4346-aab2-01f35ad62318",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/token",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"token"
+					]
+				},
+				"description": "Testiranje api poziva u kom se ne salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET a fresh token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "76e54d97-e845-4c83-b178-31dd52432b8f",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "370aa60c-7537-4e2d-90cc-0d9c5de6987a",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/token",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"token"
+					]
+				},
+				"description": "Testiranje api poziva slanjem tokena"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

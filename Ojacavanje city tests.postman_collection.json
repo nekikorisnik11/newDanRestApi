@@ -1,0 +1,646 @@
+{
+	"info": {
+		"_postman_id": "81f610be-7e53-4c4d-b443-114ac2613bce",
+		"name": "Ojacavanje city tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "it should GET token Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c5c5bca5-158d-416f-a3fe-8ded24d239e4",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"token\", x.token);\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{url}}/login?email=admin@admin.com&password=12345",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "admin@admin.com"
+						},
+						{
+							"key": "password",
+							"value": "12345"
+						},
+						{
+							"key": "id",
+							"value": "5aa1c2c35ef7a4e97b5e995a",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Testiranje prijavljivanja sa validnim podacima za prijavu."
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT be able to consume the route since no token was sent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "65ccec59-c5c4-446c-b6c6-2f3a893595e7",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/cities",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"cities"
+					]
+				},
+				"description": "Testiranje api poziva u kom se ne salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET the cities with filters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "24609048-23c0-40ae-97b0-4bd40dd2b399",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.docs[0]._id);\r",
+							"pm.environment.set(\"id\", x.docs[0]._id);\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/cities?filter=Bucaramanga&fields=name",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"cities"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "Bucaramanga"
+						},
+						{
+							"key": "fields",
+							"value": "name"
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token.\r\n(Sacuvati id grada, trebace za naredne pozive)\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET all the cities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1bf532f4-5526-4539-8147-d6ba168acbe9",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(\"id je : \"+x.docs[0]._id);\r",
+							"pm.environment.set(\"id\", x.docs[0]._id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/cities",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"cities"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT POST a city without name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bf0a6cd8-d469-46fb-89f2-89fe76b50cba",
+						"exec": [
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/cities",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"cities"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token. \r\nZa city se ne salje name\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should POST a city",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "74f5db11-c9e4-4194-b119-0eaa0c35f057",
+						"exec": [
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x._id);\r",
+							"pm.environment.set(\"id\", x._id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "646afb6e-c8d7-469d-85fe-3a67c87c2127",
+						"exec": [
+							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
+							"    Math.random().toString(36).substring(2, 7);\r",
+							"const cityname = \"City\" + \" \" + uuid;\r",
+							"pm.environment.set(\"cityname\", cityname);\r",
+							"console.log(\"city name is: \"+ cityname);\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "{{cityname}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/cities",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"cities"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT POST a city that already exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ccf8d64-850e-4630-b63c-40eabc4931d3",
+						"exec": [
+							"pm.environment.set(\"name\", city);\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "{{cityname}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/cities",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"cities"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Belgrade",
+							"disabled": true
+						},
+						{
+							"key": "fields",
+							"value": "name",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token.\r\nKreiranje grada sa vec postojecim imenom.\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET a city by the given id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "73f65cb9-1e95-48e2-be76-42b3d28d93ad",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/cities/:id",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"cities",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token. (Poslati id grada koji je sacuvan u prethodnom pozivu)"
+			},
+			"response": []
+		},
+		{
+			"name": "it should UPDATE a city given the id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cb0d9aa9-f2e9-40a1-b2f1-1d832d1fa406",
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f4e0fe94-7530-462d-bd01-5c2035b3d2ad",
+						"exec": [
+							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
+							"    Math.random().toString(36).substring(2, 7);\r",
+							"const cityname2 = \"City\" + \" \" + uuid;\r",
+							"pm.environment.set(\"cityname2\", cityname2);\r",
+							"console.log(cityname2);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "{{name2}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/cities/:id",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"cities",
+						":id"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "ec1e51c383f160bb394da0e",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token.\r\nKreiranje grada sa vec postojecim imenom.\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should DELETE a city given the id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d21874bc-191f-411f-b441-0008406f232d",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/cities/:id",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"cities",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

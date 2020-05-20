@@ -1,0 +1,1025 @@
+{
+	"info": {
+		"_postman_id": "f69b84a8-28dc-41a0-b099-a2e1e397a7dc",
+		"name": "ojacavanje profile tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "it should POST register a user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d093b756-0d2a-4125-8933-c7047f04771e",
+						"exec": [
+							"\r",
+							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
+							"    Math.random().toString(36).substring(2, 7);\r",
+							"const newemail = \"use\" + uuid + \"@goodone.com\";\r",
+							"pm.environment.set(\"newemail\", newemail);\r",
+							"\r",
+							"let emaill = \"programmer@programmer.com\";\r",
+							"\r",
+							"pm.environment.set(\"emaill\", emaill);\r",
+							"let password = \"password\" + uuid;\r",
+							"pm.environment.set(\"password\", password);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ca96f74-0df5-40bd-9992-a1216f19f46e",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"token\", x.token);\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.environment.set(\"useremail\", x.email);\r",
+							"pm.environment.set(\"iduser\", x._id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "John Doe",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{emaill}}",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "DAsda",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "phone",
+							"value": "123123",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "country",
+							"value": "US",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "admin",
+							"type": "text",
+							"disabled": true
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register"
+					]
+				},
+				"description": "\r\nSaves user token for next test"
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET token (profile)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "856c8657-7e0e-4a1c-9e67-e443b2098ab4",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f50460cb-dfc2-4c42-9837-7ff2ff09a3ee",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"token\", x.token);\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "{{emaill}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "5aa1c2c35ef7a4e97b5e995a",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Testiranje prijavljivanja sa validnim podacima za prijavu."
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT be able to consume the route since no token was sent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "80bb6c0f-dcf7-4f83-85c6-1e4c5f747a68",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile"
+					]
+				},
+				"description": "Testiranje api poziva u kom se ne salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eaf362cf-8199-4d0e-afb9-fdd96d1a8342",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT UPDATE profile empty name/email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "816c87d2-28f0-44b5-89c3-31371fe92b27",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test123456",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "urlTwitter",
+							"value": "https://hello.com",
+							"type": "text"
+						},
+						{
+							"key": "urlGitHub",
+							"value": "https://hello.io",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123123",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "Bucaramanga",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "Colombia",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token. (Email i name su prazni)\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should UPDATE profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "56832f03-7564-4ad4-b706-8ae64fdb180d",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test123456",
+							"type": "text"
+						},
+						{
+							"key": "urlTwitter",
+							"value": "https://hello.com",
+							"type": "text"
+						},
+						{
+							"key": "urlGitHub",
+							"value": "https://hello.io",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123123",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "Bucaramanga",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "Colombia",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token. \r\nuser = {\r\n name: 'Test123456',\r\n urlTwitter: 'https://hello.com',\r\n urlGitHub: 'https://hello.io',\r\n phone: '123123123',\r\n city: 'Bucaramanga',\r\n country: 'Colombia'\r\n }\r\n\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT UPDATE profile with email that already exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e9c054c4-8dea-4741-acbe-3c8ebaceb54b",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test123456",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "programmer@programmerrr.com",
+							"type": "text"
+						},
+						{
+							"key": "urlTwitter",
+							"value": "https://hello.com",
+							"type": "text"
+						},
+						{
+							"key": "urlGitHub",
+							"value": "https://hello.io",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123123",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "Bucaramangat",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "Colombia",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token.\r\nTestirati sa emailom programmer@programmer.com\r\n\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT UPDATE profile with not valid URL´s",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a0fcab57-2935-4396-9441-3832fae94206",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test123456",
+							"type": "text"
+						},
+						{
+							"key": "urlTwitter",
+							"value": "hello",
+							"type": "text"
+						},
+						{
+							"key": "urlGitHub",
+							"value": "hello",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123123",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "Bucaramanga",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "Colombia",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token.\r\nuser = {\r\nname: 'Test123456',\r\nurlTwitter: 'hello',\r\nurlGitHub: 'hello',\r\nphone: '123123123',\r\ncity: 'Bucaramanga',\r\ncountry: 'Colombia'\r\n      }\r\n\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT change password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "89e7fc46-559d-4c9a-9c84-345fe783d5b3",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"     pm.response.to.have.status(409);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c38e9f03-bf00-413a-88dc-7a8ac7030b19",
+						"exec": [
+							"const uuid = Math.random().toString(32).substring(2, 7) +\r",
+							"        Math.random().toString(32).substring(2, 7);\r",
+							"\r",
+							"let oldPassword = pm.environment.get(\"password\");\r",
+							"\r",
+							"const password = \"new\" + \"pass\" + uuid;\r",
+							"\r",
+							"pm.environment.set(\"oldPassword\", oldPassword);\r",
+							"pm.environment.set(\"password\", password);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test123456",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "urlTwitter",
+							"value": "https://hello.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "urlGitHub",
+							"value": "https://hello.io",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "phone",
+							"value": "123123123",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "city",
+							"value": "Bucaramanga",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "{{emaill}}",
+							"type": "text"
+						},
+						{
+							"key": "oldPassword",
+							"value": "somebadpassword",
+							"type": "text"
+						},
+						{
+							"key": "newPassword",
+							"value": "{{password}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile/changePassword",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile",
+						"changePassword"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "user@user.com",
+							"disabled": true
+						},
+						{
+							"key": "oldPassword",
+							"value": "12453",
+							"disabled": true
+						},
+						{
+							"key": "newPassword",
+							"value": "476568798",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token.\r\nKao oldPassword salje se nevazeci password.\r\n\r\n\r\n\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT change a too short password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "68161582-d96b-4a8f-88c5-3c06349ec8d8",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test123456",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "urlTwitter",
+							"value": "https://hello.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "urlGitHub",
+							"value": "https://hello.io",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "phone",
+							"value": "123123123",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "city",
+							"value": "Bucaramanga",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "{{emaill}}",
+							"type": "text"
+						},
+						{
+							"key": "oldPassword",
+							"value": "{{oldPassword}}",
+							"type": "text"
+						},
+						{
+							"key": "newPassword",
+							"value": "123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile/changePassword",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile",
+						"changePassword"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "programmer@programmer.com",
+							"disabled": true
+						},
+						{
+							"key": "oldPassword",
+							"value": "1234",
+							"disabled": true
+						},
+						{
+							"key": "newPassword",
+							"value": "{{password}}",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token. \r\nNovi password treba da ima manje od 5 karaktera.\r\n\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should change password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fb860065-5c58-41ad-994f-a380ae93dfb3",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test123456",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "urlTwitter",
+							"value": "https://hello.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "urlGitHub",
+							"value": "https://hello.io",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "phone",
+							"value": "123123123",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "city",
+							"value": "Bucaramanga",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "country",
+							"value": "Colombia",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "oldPassword",
+							"value": "{{oldPassword}}",
+							"type": "text"
+						},
+						{
+							"key": "newPassword",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{emaill}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/profile/changePassword",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"profile",
+						"changePassword"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token. Salju se validne lozinke\r\n\r\n"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

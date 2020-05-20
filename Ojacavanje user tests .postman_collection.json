@@ -1,0 +1,1151 @@
+{
+	"info": {
+		"_postman_id": "fb4bb7eb-f275-44b6-9809-857b4278275c",
+		"name": "Ojacavanje user tests ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "it should GET token as admin (user)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "afefa6b6-0e70-4452-b00c-2fd0cdd3f467",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"token\", x.token);\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{url}}/login?email=admin@admin.com&password=12345",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "admin@admin.com"
+						},
+						{
+							"key": "password",
+							"value": "12345"
+						},
+						{
+							"key": "id",
+							"value": "5aa1c2c35ef7a4e97b5e995a",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Salju se admin podaci. (Sacuvati token sa responsa u admin token)"
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET token as user (user)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a0f2cbfb-c196-4f31-ad87-f2e591ea8b43",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"usertoken\", x.token);\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{url}}/login?email=user@user.com&password=12345",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "user@user.com"
+						},
+						{
+							"key": "id",
+							"value": "5aa1c2c35ef7a4e97b5e995a",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "12345"
+						}
+					]
+				},
+				"description": "Salju se user podaci. (Sacuvati token sa responsa u user token)"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT be able to consume the route since no token was sent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d39b66de-7afd-45ae-892c-67f69a5fe4e4",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Testiranje api poziva u kom se ne salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET all the users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d87d7c52-8254-4b8e-8dcc-3cbbdc6b5b23",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET the users with filters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f32c650e-852a-44e9-ae26-eadeb5520292",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{url}}/users?filter=admin&fields=name,email,city,country,phone",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "admin"
+						},
+						{
+							"key": "fields",
+							"value": "name,email,city,country,phone"
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT POST a user without name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f27277ad-37f2-4929-bc02-3a85fcbf9bef",
+						"exec": [
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token. \r\nZa usera se ne salje name\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should POST a user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0f9a2ab4-665e-4885-a67b-938ba6f78a49",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"newuserid\", x._id);\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.environment.set(\"useremail\", x.email);\r",
+							"pm.environment.set(\"iduser\", x._id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b51689fd-1331-4575-87dc-2ec2651dd62d",
+						"exec": [
+							"\r",
+							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
+							"    Math.random().toString(36).substring(2, 7);\r",
+							"const newemail = \"use\" + uuid + \"@goodone.com\";\r",
+							"pm.environment.set(\"newemail\", newemail);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "John Doe",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{newemail}}",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "DAsda",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "US",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12324324324",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "admin",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						""
+					]
+				},
+				"description": "Salje se admin token.\r\nSalje se validan user objekat.\r\n(Sacuvati id usera, za kasnije)\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT POST a user with email that already exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9bfde8db-770b-4d99-afc7-06971a406074",
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a1c537d0-b20c-46e5-bdb5-cf8a3a9269bd",
+						"exec": [
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "John Doe",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{useremail}}",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "DAsda",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "US",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12324324324",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "admin",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						""
+					]
+				},
+				"description": "Salje se admin token.\r\nSalje se user sa emailom koji vec postoji u bazi.\r\n\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should NOT POST a user with not known role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a2464d57-eb48-4a13-b1fe-e1598068a2b3",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(422);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "John Doe",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{useremail}}",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "DAsda",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "US",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12324324324",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "notvalid",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						""
+					]
+				},
+				"description": "Salje se admin token. \r\nValidne role su “admin” i “user”.\r\n\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should GET all the users Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6c6a4f03-6c2a-424e-9a4f-e6773c378ce5",
+						"exec": [
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "{{iduser}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/users/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						""
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token."
+			},
+			"response": []
+		},
+		{
+			"name": "it should UPDATE a user given the id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3c79d538-b920-4cd7-b9c8-acbb9d950476",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"pm.environment.set(\"useremail\", x.email);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "527405b8-3b9b-4e98-8177-f0e8419ec45b",
+						"exec": [
+							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
+							"        Math.random().toString(36).substring(2, 7);\r",
+							"const newwemail = \"use\" + uuid + \"@goodone.com\";\r",
+							"pm.environment.set(\"newwemail\", newwemail);\r",
+							"\r",
+							"const newname = \"Eric\" + uuid ;\r",
+							"pm.environment.set(\"newname\", newname);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "e372b1b2292d0d9e6ba452d2d8a3e5f58079b8342bd68cc76b7ad5c9e569f2c8a0135fcc033c038e2a12912749784dd8c5d31aa4e8513cad2ee5f858fb1458c23a5b88718035b2f16e56ba0a5220a5f5bf6606854d6b076be9a68610b2ced7a9cd852c84c3ffec87519e2de0526caaf53b5d072bba58e843720b7c8ee2edc5942c8d3eb71715c908dc4921c0e82f5461b7d9c9f185284b0cef2f48645f0286303877f63888229a731b6d2b4c7ade9528b9fe8aacc87d1368c307a6fa13dc6ea1",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "{{iduser}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "{{newname}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{newwemail}}",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123213",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "ASDasd",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "dASDasd",
+							"type": "text"
+						},
+						{
+							"key": "urlTwitter",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "urlGitHub",
+							"value": "",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/users/{{duser}}?id={{iduser}}",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"users",
+						"{{duser}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{iduser}}"
+						}
+					]
+				},
+				"description": "Salje se admin token.\r\nSalje se novo ime za usera i novi email koji ne postoji u bazi.\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should UPDATE a user given the id Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "40f4eaf2-772b-4927-8f6f-0a029cfd31be",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f8df9837-32e4-4049-bfb4-2575e5b41f53",
+						"exec": [
+							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
+							"        Math.random().toString(36).substring(2, 7);\r",
+							"const newname = \"Eric\" + uuid;\r",
+							"pm.environment.set(\"newname\", newname);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "e372b1b2292d0d9e6ba452d2d8a3e5f58079b8342bd68cc76b7ad5c9e569f2c8a0135fcc033c038e2a12912749784dd8c5d31aa4e8513cad2ee5f858fb1458c23a5b88718035b2f16e56ba0a5220a5f5bf6606854d6b076be9a68610b2ced7a9cd852c84c3ffec87519e2de0526caaf53b5d072bba58e843720b7c8ee2edc5942c8d3eb71715c908dc4921c0e82f5461b7d9c9f185284b0cef2f48645f0286303877f63888229a731b6d2b4c7ade9528b9fe8aacc87d1368c307a6fa13dc6ea1",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "{{iduser}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "{{newname}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{useremail}}",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123213",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "ASDasd",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "dASDasd",
+							"type": "text"
+						},
+						{
+							"key": "urlTwitter",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "urlGitHub",
+							"value": "",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-demo.daniel-avellaneda.com/users/{{duser}}?id={{iduser}}",
+					"protocol": "https",
+					"host": [
+						"api-demo",
+						"daniel-avellaneda",
+						"com"
+					],
+					"path": [
+						"users",
+						"{{duser}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{iduser}}"
+						}
+					]
+				},
+				"description": "Salje se admin token.\r\nSalje se novo ime za usera i novi email koji ne postoji u bazi.\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should POST a user Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5b286be5-fa5a-49a2-94f6-834607cff439",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"newuserid\", x._id);\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.environment.set(\"useremail\", x.email);\r",
+							"pm.environment.set(\"iduser\", x._id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "96dc4f3a-e7de-4449-9d63-46d2b9796480",
+						"exec": [
+							"\r",
+							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
+							"    Math.random().toString(36).substring(2, 7);\r",
+							"const newemail = \"use\" + uuid + \"@goodone.com\";\r",
+							"pm.environment.set(\"newemail\", newemail);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "John Doe",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{newemail}}",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "DAsda",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "123123",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "US",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12324324324",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "admin",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						""
+					]
+				},
+				"description": "Salje se admin token.\r\nSalje se validan user objekat.\r\n(Sacuvati id usera, za kasnije)\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "it should DELETE a city given the id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "34584882-f663-4942-8114-9c45f65ad7a4",
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/users/{{duser}}?id={{iduser}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"{{duser}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{iduser}}"
+						}
+					]
+				},
+				"description": "Testiranje api poziva u kom se salje token."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "2c84b3f7-ee0d-4533-a96c-8dd1266cef4e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "a80cdd1b-b8a3-4a57-8cfa-88379bffb2d8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
